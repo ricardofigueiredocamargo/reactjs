@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useInput } from './Input.tsx'
 import { Main, AllButtons, Output, Result } from './assets/StyledComponents.tsx'
 import { DigitButton } from './components/DigitButton.tsx'
@@ -12,7 +11,7 @@ export const ACTIONS = {
     EVALUATE: 'evaluate'
 }
 
-let clicked = false // variável para evitar que um operador seja selecionado mais de uma vez antes de adicionar um novo número
+let operatorClicked = false // variável para evitar que um operador seja selecionado mais de uma vez antes de adicionar um novo número
 
 export function Calculator() {
 
@@ -24,13 +23,11 @@ export function Calculator() {
     const secondNumber = useInput().secondNumber
     const operator = useInput().operator
 
-    
-
     function handleClick(value: string, type: string) {
         
         switch (type) {
             case ACTIONS.ADD_NUMBER:
-                clicked = false
+                operatorClicked = false
 
                 if (value == '0' && firstNumber == '0') return
                 if (value == '.' && firstNumber.includes('.')) return
@@ -42,24 +39,44 @@ export function Calculator() {
                 break
 
             case ACTIONS.ADD_OPERATOR:
-                if (clicked == false) {
+                if (operatorClicked == true) {
+                    if (firstNumber == '') {
+                        changeOperator(value)
+                    }
+                }
+
+                if (operatorClicked == false) {
                     if (secondNumber == '' && firstNumber == '') return
                     if (secondNumber == '') {
                         addSecondNumber(firstNumber)
                         changeOperator(value)
                         addFirstNumber('')
-                        clicked = true
+                        operatorClicked = true
                         return
                     }
                     addSecondNumber(secondNumber + operator + firstNumber)
                     changeOperator(value)
                     addFirstNumber('')
-                    clicked = true
+                    operatorClicked = true
                 }
                 break
 
+            case ACTIONS.ERASE:
+                operatorClicked = false
+
+                if (firstNumber !== '') {
+                    addFirstNumber(firstNumber.substring(0, firstNumber.length - 1))
+                }
+                if (firstNumber == '' && operator !== '') {
+                    changeOperator('')
+                }
+                if (firstNumber == '' && operator == '' && secondNumber !== '') {
+                    addSecondNumber(secondNumber.substring(0, secondNumber.length - 1))
+                }
+                break    
+
             case ACTIONS.ERASE_ALL: 
-                clicked = false
+                operatorClicked = false
 
                 addFirstNumber('')
                 addSecondNumber('')
@@ -67,11 +84,15 @@ export function Calculator() {
                 break   
 
             case ACTIONS.EVALUATE:
-                clicked = false
+                operatorClicked = false
 
-                addFirstNumber(eval(secondNumber + operator + firstNumber))
+                let resultado = eval(secondNumber + operator + firstNumber)
+                resultado = resultado.toString()
+                
+                addFirstNumber(resultado)
                 addSecondNumber('')
                 changeOperator('')
+               
                 break
         }
 
