@@ -1,11 +1,12 @@
 import styled from 'styled-components'
 
-export const Calculator = styled.main`
+export const Main = styled.main`
   height: auto;
   width: auto;
 `
 
 export const Output = styled.section`
+  position: relative;
   background-color: #252D4A;
   color: #fff;
   width: 100%;
@@ -16,10 +17,17 @@ export const Output = styled.section`
   padding: 0px 10px;
   margin-bottom: 30px;
   border-radius: 5px;
+  overflow: hidden;
 
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row;
+  justify-content: flex-end;
+`
+
+export const Result = styled.span`
+  display: block;
+  position: absolute;
+
 `
 
 export const AllButtons = styled.section`
