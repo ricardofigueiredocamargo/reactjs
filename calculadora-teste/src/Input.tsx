@@ -15,9 +15,13 @@ interface InputContextData{
     secondNumber: string;
 }
 
+interface Children {
+    children: React.ReactNode
+}
+
 const InputContext = createContext<InputContextData>({} as InputContextData);
 
-const InputProvider: React.FC = ({ children }) => {
+const InputProvider: React.FC<Children> = ({ children }: Children) => {
     const [firstNumber, setFirstNumber] = useState('');
     const [operator, setOperator] = useState('');
     const [secondNumber, setSecondNumber] = useState('');

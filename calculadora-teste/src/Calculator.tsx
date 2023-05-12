@@ -23,7 +23,7 @@ export function Calculator() {
     const secondNumber = useInput().secondNumber
     const operator = useInput().operator
 
-    function handleClick(value: string, type: string) {
+    function handleClick(value: string, type: string): void {
         
         switch (type) {
             case ACTIONS.ADD_NUMBER:
@@ -106,25 +106,25 @@ export function Calculator() {
                 </Result>
             </Output>
             <AllButtons>
-                <OperationButton operation="C" handleClick={handleClick}/>
-                <OperationButton operation="CC" handleClick={handleClick}/>
-                <OperationButton operation="*" handleClick={handleClick}/>
-                <OperationButton operation="/" handleClick={handleClick}/>
+                <OperationButton digit="C" handleClick={handleClick}/>
+                <OperationButton digit="CC" handleClick={handleClick}/>
+                <OperationButton digit="*" handleClick={handleClick}/>
+                <OperationButton digit="/" handleClick={handleClick}/>
 
                 <DigitButton digit="7" handleClick={handleClick}/>
                 <DigitButton digit="8" handleClick={handleClick}/>
                 <DigitButton digit="9" handleClick={handleClick}/>
-                <OperationButton operation="-" handleClick={handleClick}/>
+                <OperationButton digit="-" handleClick={handleClick}/>
 
                 <DigitButton digit="4" handleClick={handleClick}/>
                 <DigitButton digit="5" handleClick={handleClick}/>
                 <DigitButton digit="6" handleClick={handleClick}/>
-                <OperationButton operation="+" handleClick={handleClick}/>
+                <OperationButton digit="+" handleClick={handleClick}/>
 
                 <DigitButton digit="1" handleClick={handleClick}/>
                 <DigitButton digit="2" handleClick={handleClick}/>
                 <DigitButton digit="3" handleClick={handleClick}/>
-                <OperationButton operation="=" handleClick={handleClick}/>
+                <OperationButton digit="=" handleClick={handleClick}/>
 
                 <DigitButton digit="0" handleClick={handleClick}/>
                 <DigitButton digit="." handleClick={handleClick}/>

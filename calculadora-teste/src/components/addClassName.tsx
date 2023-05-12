@@ -5,3 +5,8 @@ export function addClassName(value: string, type:string) {
     }
     return span
 }
+
+export interface IProps {
+    handleClick: Function,
+    digit: string
+}

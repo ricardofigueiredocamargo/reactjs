@@ -1,13 +1,13 @@
 import { Button } from '../assets/StyledComponents'
-import { addClassName } from './addClassName'
+import { addClassName, IProps } from './addClassName'
 import { ACTIONS } from '../Calculator'
 
-export function OperationButton({ handleClick, operation }) {
-    let span = addClassName(operation, 'row')
+export function OperationButton({ handleClick, digit }: IProps) {
+    let span = addClassName(digit, 'row')
 
     let type = ACTIONS.ADD_OPERATOR
 
-    switch (operation) {
+    switch (digit) {
         case 'C':
             type = ACTIONS.ERASE
             break
@@ -18,12 +18,14 @@ export function OperationButton({ handleClick, operation }) {
             type = ACTIONS.EVALUATE        
     }
 
+    console.log(handleClick)
+
     return (
         <Button 
             className={span}
-            onClick={() => handleClick(operation, type)}
+            onClick={() => handleClick(digit, type)}
         >
-            {operation}
+            {digit}
         </Button>
     )
 }
