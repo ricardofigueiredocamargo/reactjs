@@ -32,7 +32,11 @@ export function Calculator() {
                 if (value == '0' && firstNumber == '0') return
                 if (value == '.' && firstNumber.includes('.')) return
                 if (firstNumber == '0' && value !== '0') {
-                    addFirstNumber(value)
+                    if (value == '.') {
+                        addFirstNumber(firstNumber + value)
+                    } else {
+                        addFirstNumber(value)
+                    }
                     return
                 }
                 addFirstNumber(firstNumber + value)
