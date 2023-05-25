@@ -88,3 +88,42 @@ return () => mapObject.setTarget(undefined);
       })
   
       map.addLayer(baseLayerGroup) 
+
+/*  useEffect(() => {
+    const map = new Map({
+      view: new View({
+        center: [-4842800.131497843, -2318792.1804284034],
+        zoom: 15,
+        maxZoom: 20,
+        minZoom: 5,
+      }),
+      layers: [
+        new TileLayer({source: new OSM()})
+      ]
+    })
+
+    map.addEventListener('click', (e) => {
+      let xy = toLonLat(e.coordinate);
+      console.log(xy);
+      xy = fromLonLat(xy)
+      console.log(xy);
+    })
+
+    map.setTarget(mapRef.current)
+  }, []) */      
+
+  useEffect(() => {
+    const mapObject = new Map({
+      view: new View({
+        center: center,
+        zoom: 15,
+        maxZoom: 20,
+        minZoom: 5,
+      }),
+      layers: [
+        new TileLayer({source: new OSM()})
+      ]
+    })
+
+    mapObject.setTarget(mapRef.current)
+  }, [])
