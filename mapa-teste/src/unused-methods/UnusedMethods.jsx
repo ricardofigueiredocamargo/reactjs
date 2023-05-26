@@ -127,3 +127,25 @@ return () => mapObject.setTarget(undefined);
 
     mapObject.setTarget(mapRef.current)
   }, [])
+
+  /* const estiloLinha = new Style({
+            stroke: new Stroke({
+              color: 'blue',
+              width: 2
+            })
+          })
+
+          for (let pos in routeCoordinates) {
+            const linha = new Feature({
+              geometry: new LineString(fromLonLat(routeCoordinates[pos]))
+            })
+
+            linha.setStyle(estiloLinha)
+
+            const camadaRota = new VectorLayer({
+              source: new VectorSource({
+                features: [linha]
+              })
+            })
+
+            map.addLayer(camadaRota) */

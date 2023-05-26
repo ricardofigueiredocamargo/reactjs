@@ -6,11 +6,18 @@ import TileLayer from 'ol/layer/Tile.js';
 import OLVectorLayer from "ol/layer/Vector";
 import './assets/App.css'
 import { toLonLat, fromLonLat } from 'ol/proj';
+import Feature from 'ol/Feature';
+import Style from 'ol/style/Style';
+import axios from 'axios';
 
 
 import { Control, Botoes } from './assets/StyledComponents';
 import { ChangeLayerButton } from './Components/ChangeLayerButton';
 import { LocationInput } from './Components/LocationInput';
+import { LineString } from 'ol/geom';
+import Stroke from 'ol/style/Stroke';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
 
 function App() {
   const [center, setCenter] = useState([-4842800.131497843, -2318792.1804284034])
@@ -41,8 +48,46 @@ function App() {
 
   useEffect(() => {
     if (originCoordinates !== '' && destinationCoordinates !== '') {
-      console.log(originCoordinates)
-      console.log(destinationCoordinates)
+      const fetchRoute = async () => {
+        const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${originCoordinates}&end=${destinationCoordinates}`
+
+        try {
+          const response = await axios.get(url)
+          const routeCoordinates = response.data.features[0].geometry.coordinates
+          console.log(routeCoordinates)
+
+          for (let pos in routeCoordinates) {
+            console.log(routeCoordinates[pos])
+          }
+
+          const linha = new Feature({
+            geometry: new LineString([fromLonLat(routeCoordinates[0])], [fromLonLat(routeCoordinates[1])])
+          })
+
+          const estiloLinha = new Style({
+            stroke: new Stroke({
+              color: 'blue',
+              width: 2
+            })
+          })
+
+          linha.setStyle(estiloLinha)
+
+          const camadaRota = new VectorLayer({
+            source: new VectorSource({
+              features: [linha]
+            })
+          })
+
+          map.addLayer(camadaRota)
+          
+  
+        } catch (error) {
+          console.log(error)
+        }
+      }
+
+      fetchRoute()
     }
 
   }, [originCoordinates, destinationCoordinates])

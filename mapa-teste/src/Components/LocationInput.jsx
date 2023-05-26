@@ -19,57 +19,58 @@ export function LocationInput({ apiKey, map, setOriginCoordinates, setDestinatio
     }
     
     function handleDestination(event) {
-    setDestination(event.target.value)
+        setDestination(event.target.value)
     }
     
     function searchLocation(location) {
-    const fetchRoute = async () => {
-        const url = `https://api.openrouteservice.org/geocode/autocomplete?api_key=${apiKey}&text=${location}&focus.point.lon=-43.50361376060541&focus.point.lat=-20.385812669995545&boundary.country=BR&layers=locality`;
-    
-        try {
-        const response = await axios.get(url);
-        const routeCoordinates = response.data.features[0].geometry.coordinates;
+        const fecthCoordinates = async () => {
+            const url = `https://api.openrouteservice.org/geocode/autocomplete?api_key=${apiKey}&text=${location}&focus.point.lon=-43.50361376060541&focus.point.lat=-20.385812669995545&boundary.country=BR&layers=locality`;
+        
+            try {
+                const response = await axios.get(url);
+                const locationCoordinates = response.data.features[0].geometry.coordinates;
 
-        if (location == origin) {
-            setOriginCoordinates(routeCoordinates)
-            location = 'origin'
-        }
+                if (location == origin) {
+                    setOriginCoordinates(locationCoordinates)
+                    location = 'origin'
+                }
 
-        if (location == destination) {
-            setDestinationCoordinates(routeCoordinates)
-            location = 'destination'
-        }
-    
-        const marker = new Feature({
-            geometry: new Point(fromLonLat(routeCoordinates))
-        });
-    
-        const markerStyle = new Style({
-            image: new Icon({
-            src: `src/assets/marker-${location}.svg`,
-            })
-        });
-    
-        marker.setStyle(markerStyle);
-    
-        const vectorLayer = new VectorLayer({
-            source: new VectorSource({
-            features: [marker]
-            })
-        });
-    
-        map.addLayer(vectorLayer);
+                if (location == destination) {
+                    setDestinationCoordinates(locationCoordinates)
+                    location = 'destination'
+                }
+            
+                const marker = new Feature({
+                    geometry: new Point(fromLonLat(locationCoordinates))
+                });
+            
+                const markerStyle = new Style({
+                    image: new Icon({
+                    src: `src/assets/marker-${location}.svg`,
+                    })
+                });
+            
+                marker.setStyle(markerStyle);
+            
+                const vectorLayer = new VectorLayer({
+                    source: new VectorSource({
+                    features: [marker]
+                    })
+                });
+            
+                map.addLayer(vectorLayer);
 
-        map.setView(new View({
-            center: fromLonLat(routeCoordinates),
-            zoom: 10
-        }))
-        } catch (error) {
-        console.log(error);
-        }
-    };
+                map.setView(new View({
+                    center: fromLonLat(locationCoordinates),
+                    zoom: 10
+                }))
 
-    fetchRoute();
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fecthCoordinates();
     }
 
     return (
