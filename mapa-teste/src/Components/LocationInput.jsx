@@ -67,7 +67,7 @@ export function LocationInput({ apiKey, map, setOriginCoordinates, setDestinatio
 
                 map.setView(new View({
                     center: fromLonLat(locationCoordinates),
-                    zoom: 10
+                    zoom: 11
                 }))
 
             } catch (error) {

@@ -4,19 +4,12 @@ import View from 'ol/View.js';
 import OSM from 'ol/source/OSM.js';
 import TileLayer from 'ol/layer/Tile.js';
 import './assets/App.css'
-import { toLonLat, fromLonLat } from 'ol/proj';
-import Feature from 'ol/Feature';
-import Style from 'ol/style/Style';
-import axios from 'axios';
-
 
 import { Control, Botoes } from './assets/StyledComponents';
 import { ChangeLayerButton } from './Components/ChangeLayerButton';
 import { LocationInput } from './Components/LocationInput';
-import { LineString } from 'ol/geom';
-import Stroke from 'ol/style/Stroke';
-import VectorLayer from 'ol/layer/Vector';
-import VectorSource from 'ol/source/Vector';
+
+import { CreateRoute } from './CreateRoute';
 
 function App() {
   const [map, setMap] = useState(new Map())
@@ -44,59 +37,9 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (originCoordinates !== '' && destinationCoordinates !== '') {
-      const fetchRoute = async () => {
-        const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${originCoordinates}&end=${destinationCoordinates}`
-
-        try {
-          const response = await axios.get(url)
-          const routeCoordinates = response.data.features[0].geometry.coordinates
-
-          map.getLayers().getArray()
-            .filter(layer => layer.get('name') === 'Line')
-            .forEach(layer => map.removeLayer(layer));
-   
-          let lineStyle = [
-            // linestring
-            new Style({
-              stroke: new Stroke({
-                color: 'blue',
-                width: 4
-              })
-            })
-          ];
-
-          for (let pos in routeCoordinates) {
-            let next = Number(pos) + 1
-
-            let firstCoordinate = fromLonLat(routeCoordinates[pos])
-            let secondCoordinate = fromLonLat(routeCoordinates[next])
-
-            //create the line       
-            let line = new VectorLayer({
-              source: new VectorSource({
-                features: [new Feature({
-                  geometry: new LineString([firstCoordinate, secondCoordinate]),
-                  name: 'Line'
-                })]
-              }),
-              name: 'Line'
-            });
-
-            //set the style and add to layer
-            line.setStyle(lineStyle);
-            map.addLayer(line);
-          }   
-          console.log(map.getLayers())
-  
-        } catch (error) {
-          console.log(error)
-        }
-      }
-
-      fetchRoute()
-    }
-
+    if (originCoordinates !== '' && destinationCoordinates !== ''){
+      CreateRoute(map, originCoordinates, destinationCoordinates, apiKey)
+    } 
   }, [originCoordinates, destinationCoordinates])
 
   return (
@@ -115,6 +58,3 @@ function App() {
 }
 
 export default App
-
-
-// `https://api.openrouteservice.org/geocode/autocomplete?api_key=${apiKey}&text=${origin}&focus.point.lon=-43.50361376060541&focus.point.lat=-20.385812669995545&boundary.country=BR&layers=locality`
