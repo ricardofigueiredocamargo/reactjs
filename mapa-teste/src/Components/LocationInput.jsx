@@ -24,7 +24,7 @@ export function LocationInput({ apiKey, map, setOriginCoordinates, setDestinatio
     
     function searchLocation(location) {
         const fecthCoordinates = async () => {
-            const url = `https://api.openrouteservice.org/geocode/autocomplete?api_key=${apiKey}&text=${location}&focus.point.lon=-43.50361376060541&focus.point.lat=-20.385812669995545&boundary.country=BR&layers=locality`;
+            const url = `https://api.openrouteservice.org/geocode/autocomplete?api_key=${apiKey}&text=${location}&focus.point.lon=-43.50361376060541&focus.point.lat=-20.385812669995545&boundary.country=BR&layers=locality,address`;
         
             try {
                 const response = await axios.get(url);
@@ -89,6 +89,7 @@ export function LocationInput({ apiKey, map, setOriginCoordinates, setDestinatio
             value={origin}
             onChange={handleOrigin}
             onBlur={() => searchLocation(origin)}
+            autoComplete="off"
           />
         </Inserir>
         <Inserir>
@@ -100,6 +101,7 @@ export function LocationInput({ apiKey, map, setOriginCoordinates, setDestinatio
             value={destination}
             onChange={handleDestination}
             onBlur={() => searchLocation(destination)}
+            autoComplete="off"
           />
         </Inserir> 
         </>
