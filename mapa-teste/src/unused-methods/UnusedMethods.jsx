@@ -149,3 +149,32 @@ return () => mapObject.setTarget(undefined);
             })
 
             map.addLayer(camadaRota) */
+
+            //example coordinates
+          var lonlat = fromLonLat(routeCoordinates[0]);
+          var location2 = fromLonLat(routeCoordinates[1]);
+
+          //create the line's style
+          var linieStyle = [
+            // linestring
+            new Style({
+              stroke: new Stroke({
+                color: 'blue',
+                width: 5
+              })
+            })
+          ];
+
+          //create the line       
+          var linie = new VectorLayer({
+            source: new VectorSource({
+              features: [new Feature({
+                geometry: new LineString([lonlat, location2]),
+                name: 'Line',
+              })]
+            })
+          });
+
+          //set the style and add to layer
+          linie.setStyle(linieStyle);
+          map.addLayer(linie);

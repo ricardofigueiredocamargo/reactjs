@@ -39,6 +39,10 @@ export function LocationInput({ apiKey, map, setOriginCoordinates, setDestinatio
                     setDestinationCoordinates(locationCoordinates)
                     location = 'destination'
                 }
+
+                map.getLayers().getArray()
+                    .filter(layer => layer.get('name') === `marker-${location}`)
+                    .forEach(layer => map.removeLayer(layer));
             
                 const marker = new Feature({
                     geometry: new Point(fromLonLat(locationCoordinates))
@@ -55,7 +59,8 @@ export function LocationInput({ apiKey, map, setOriginCoordinates, setDestinatio
                 const vectorLayer = new VectorLayer({
                     source: new VectorSource({
                     features: [marker]
-                    })
+                    }),
+                    name: `marker-${location}`
                 });
             
                 map.addLayer(vectorLayer);

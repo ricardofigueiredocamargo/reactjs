@@ -3,7 +3,6 @@ import { Map } from 'ol'
 import View from 'ol/View.js';
 import OSM from 'ol/source/OSM.js';
 import TileLayer from 'ol/layer/Tile.js';
-import OLVectorLayer from "ol/layer/Vector";
 import './assets/App.css'
 import { toLonLat, fromLonLat } from 'ol/proj';
 import Feature from 'ol/Feature';
@@ -20,9 +19,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 
 function App() {
-  const [center, setCenter] = useState([-4842800.131497843, -2318792.1804284034])
   const [map, setMap] = useState(new Map())
-  const [source, setSource] = useState(new OSM())
   
   const [originCoordinates, setOriginCoordinates] = useState('')
   const [destinationCoordinates, setDestinationCoordinates] = useState('')
@@ -35,15 +32,15 @@ function App() {
       target: 'map',
       layers: [
         new TileLayer({
-          source: source
+          source: new OSM(),
+          title: 'OSMStandard'
         })
       ],
       view: new View({
-        center: center,
+        center: [-4842800.131497843, -2318792.1804284034],
         zoom: 15
       })
     }))
-    console.log(toLonLat(center))
   }, [])
 
   useEffect(() => {
@@ -54,33 +51,43 @@ function App() {
         try {
           const response = await axios.get(url)
           const routeCoordinates = response.data.features[0].geometry.coordinates
-          console.log(routeCoordinates)
+
+          map.getLayers().getArray()
+            .filter(layer => layer.get('name') === 'Line')
+            .forEach(layer => map.removeLayer(layer));
+   
+          let lineStyle = [
+            // linestring
+            new Style({
+              stroke: new Stroke({
+                color: 'blue',
+                width: 4
+              })
+            })
+          ];
 
           for (let pos in routeCoordinates) {
-            console.log(routeCoordinates[pos])
-          }
+            let next = Number(pos) + 1
 
-          const linha = new Feature({
-            geometry: new LineString([fromLonLat(routeCoordinates[0])], [fromLonLat(routeCoordinates[1])])
-          })
+            let firstCoordinate = fromLonLat(routeCoordinates[pos])
+            let secondCoordinate = fromLonLat(routeCoordinates[next])
 
-          const estiloLinha = new Style({
-            stroke: new Stroke({
-              color: 'blue',
-              width: 2
-            })
-          })
+            //create the line       
+            let line = new VectorLayer({
+              source: new VectorSource({
+                features: [new Feature({
+                  geometry: new LineString([firstCoordinate, secondCoordinate]),
+                  name: 'Line'
+                })]
+              }),
+              name: 'Line'
+            });
 
-          linha.setStyle(estiloLinha)
-
-          const camadaRota = new VectorLayer({
-            source: new VectorSource({
-              features: [linha]
-            })
-          })
-
-          map.addLayer(camadaRota)
-          
+            //set the style and add to layer
+            line.setStyle(lineStyle);
+            map.addLayer(line);
+          }   
+          console.log(map.getLayers())
   
         } catch (error) {
           console.log(error)

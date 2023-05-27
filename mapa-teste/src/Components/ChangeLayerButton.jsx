@@ -35,6 +35,10 @@ export function ChangeLayerButton({ layer, map }) {
             openStreetMapStandard, openStreetMapHumanitarian, waterColor
           ]
         })
+
+        map.getLayers().getArray()
+          .filter(layerTitle => layerTitle.get('title') !== layer)
+          .forEach(layerTitle => map.removeLayer(layerTitle));
     
         map.addLayer(baseLayerGroup)
     
